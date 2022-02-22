@@ -53,6 +53,9 @@ router.post("/editcar/:id", async (req, res, next) => {
 });
 
 /* MOSTRAR JSON */
-
+router.get("/api", async (req, res, next) => {
+    const cars = await pool.query("SELECT * FROM cars");
+    res.json(cars);
+  });
 
 module.exports = router;
