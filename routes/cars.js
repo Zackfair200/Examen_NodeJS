@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 var express = require("express");
 var router = express.Router();
 const pool = require("../db/database");
@@ -37,7 +38,7 @@ router.get("/delete/:id", async (req, res, next) => {
 router.get("/editcar/:id", async (req, res, next) => {
   const { id } = req.params;
   const edited = await pool.query("SELECT * FROM cars WHERE id=?", [id]);
-  res.render("editcar",edited[0]);
+  res.render("editcar", edited[0]);
 });
 
 router.post("/editcar/:id", async (req, res, next) => {
@@ -48,14 +49,20 @@ router.post("/editcar/:id", async (req, res, next) => {
     numero,
     imagen,
   };
-  await pool.query("UPDATE cars SET ? WHERE id=?", [editedCar,id]);
+  await pool.query("UPDATE cars SET ? WHERE id=?", [editedCar, id]);
   res.redirect("/cars");
 });
 
 /* MOSTRAR JSON */
 router.get("/api", async (req, res, next) => {
-    const cars = await pool.query("SELECT * FROM cars");
-    res.json(cars);
-  });
+  const cars = await pool.query("SELECT * FROM cars");
+  res.json(cars);
+});
+
+/* MOSTRAR API RICK */
+router.get("/apirick", async (req, res, next) => {
+  const data = await axios("https://rickandmortyapi.com/api/character");
+  res.json(data.data.results[0].name);
+});
 
 module.exports = router;
