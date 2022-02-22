@@ -39,5 +39,24 @@ router.get("/delete/:id", async (req, res, next) => {
   res.redirect("/users");
 });
 
+/* EDITAR USUARIOS */
+router.get("/edituser/:id", async (req, res, next) => {
+  const { id } = req.params;
+  const edited = await pool.query("SELECT * FROM users WHERE id=?", [id]);
+  res.render("edituser",edited[0]);
+});
+
+router.post("/edituser/:id", async (req, res, next) => {
+  const { id } = req.params;
+  const { fullname, username, email, password } = req.body;
+  const newUser = {
+    fullname,
+    username,
+    email,
+    password,
+  };
+  await pool.query("UPDATE users SET ? WHERE id=?", [newUser,id]);
+  res.redirect("/users");
+});
 
 module.exports = router;
